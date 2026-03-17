@@ -104,7 +104,7 @@ export default function Home() {
 
   if (roleLoading || isLoading) {
     return (
-      <div className="min-h-screen p-8 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 flex items-center justify-center">
+      <div className="min-h-screen p-8 bg-gradient-to-br from-purple-500 via-pink-500 to-white-500 flex items-center justify-center">
         <div className="text-xl text-white">Загрузка...</div>
       </div>
     )

@@ -86,7 +86,10 @@ export default function Home() {
   // Загрузка
   if (roleLoading || isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 via-pink-600 to-red-600">
+      <div className="min-h-screen flex items-center justify-center .bg-gradient-to-br {
+    --tw-gradient-position: to bottom right in oklab;
+    background-image: linear-gradient(var(--tw-gradient-stops));
+    )">
         <div className="text-white text-xl">Загрузка...</div>
       </div>
     )
@@ -95,7 +98,10 @@ export default function Home() {
   // Ошибка
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 via-pink-600 to-red-600">
+      <div className="min-h-screen flex items-center justify-center .bg-gradient-to-br .bg-gradient-to-br {
+    --tw-gradient-position: to bottom right in oklab;
+    background-image: linear-gradient(var(--tw-gradient-stops));
+}">
         <div className="bg-white rounded-lg p-6 shadow-xl">
           <p className="text-red-600">Ошибка: {error.message}</p>
         </div>
@@ -105,7 +111,9 @@ export default function Home() {
 
   // Основная страница
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-600 to-red-600 p-8">
+    <div className="min-h-screen .bg-gradient-to-br {
+    --tw-gradient-position: to bottom right in oklab;
+    background-image: linear-gradient(var(--tw-gradient-stops))}">
       <div className="max-w-6xl mx-auto">
         
         {/* Шапка */}

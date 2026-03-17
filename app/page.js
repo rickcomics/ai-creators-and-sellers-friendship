@@ -13,8 +13,8 @@ export default function Home() {
     const initAuth = async () => {
       console.log('🔍 Инициализация авторизации...')
       
-      const result = await supabase.auth.getSession()
-      const session = result.data?.session
+      const sessionResult = await supabase.auth.getSession()
+      const session = sessionResult.data?.session
       
       console.log('📦 Session:', session)
       
@@ -32,12 +32,12 @@ export default function Home() {
     const loadUserRole = async (userId) => {
       console.log('🔍 Загрузка роли для:', userId)
       
-      const result = await supabase
+      const profileResult = await supabase
         .from('profiles')
         .select('role')
         .eq('id', userId)
       
-      const profileData = result.data
+      const profileData = profileResult.data
       console.log('📦 Profile Data:', profileData)
       
       const profile = profileData?.[0]
@@ -104,51 +104,52 @@ export default function Home() {
 
   if (roleLoading || isLoading) {
     return (
-    <div className="min-h-screen p-8 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500">
-      <div className="min-h-screen p-8 flex items-center justify-center">
-        <div className="text-xl">Загрузка...</div>
+      <div className="min-h-screen p-8 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 flex items-center justify-center">
+        <div className="text-xl text-white">Загрузка...</div>
       </div>
-    </div>  
     )
   }
 
   if (error) {
     return (
-      
-      <div className="min-h-screen p-8 flex items-center justify-center">
-        <div className="text-xl text-red-600">Ошибка: {error.message}</div>
+      <div className="min-h-screen p-8 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 flex items-center justify-center">
+        <div className="text-xl text-white bg-red-600 px-6 py-4 rounded-lg">
+          Ошибка: {error.message}
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-8 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">🔥 Биржа AI-карточек</h1>
+          <h1 className="text-3xl font-bold text-white drop-shadow-lg">
+            🔥 Биржа AI-карточек
+          </h1>
           <div className="flex gap-4">
             {user ? (
               <>
                 {userRole === 'seller' ? (
-                  <Link href="/create-order" className="bg-blue-600 text-white px-4 py-2 rounded">
+                  <Link href="/create-order" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
                     + Создать заказ
                   </Link>
                 ) : (
-                  <span className="text-gray-400 px-4 py-2">🎨 Креатор</span>
+                  <span className="text-white px-4 py-2 bg-white/20 rounded">🎨 Креатор</span>
                 )}
-                <Link href="/profile" className="bg-gray-600 text-white px-4 py-2 rounded">
+                <Link href="/profile" className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
                   Профиль
                 </Link>
-                <button onClick={handleLogout} className="bg-red-600 text-white px-4 py-2 rounded">
+                <button onClick={handleLogout} className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
                   Выйти
                 </button>
               </>
             ) : (
               <>
-                <Link href="/login" className="bg-blue-600 text-white px-4 py-2 rounded">
+                <Link href="/login" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
                   Войти
                 </Link>
-                <Link href="/register" className="bg-green-600 text-white px-4 py-2 rounded">
+                <Link href="/register" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
                   Регистрация
                 </Link>
               </>
@@ -157,21 +158,26 @@ export default function Home() {
         </div>
 
         {!orders || orders.length === 0 ? (
-          <div className="text-center py-10">
-            <p className="text-gray-500 text-lg">😕 Пока нет заказов</p>
+          <div className="text-center py-10 bg-white/10 rounded-lg backdrop-blur-sm">
+            <p className="text-white text-lg">😕 Пока нет заказов</p>
           </div>
         ) : (
           <div className="grid md:grid-cols-3 gap-6">
-            {orders.map(order => (
-              <div key={order.id} className="border rounded-lg p-4 shadow hover:shadow-lg transition bg-white">
-                <h2 className="font-bold text-lg">{order.title}</h2>
-                <p className="text-gray-600 mt-2">{order.description}</p>
-                <p className="text-green-600 font-bold mt-4">💰 {order.budget} руб.</p>
-                <Link href={`/orders/${order.id}`} className="block mt-4 text-blue-600 hover:underline">
-                  Подробнее →
-                </Link>
-              </div>
-            ))}
+            {orders.map(function(order) {
+              return (
+                <div key={order.id} className="border rounded-lg p-4 shadow-lg hover:shadow-xl transition bg-white/95 backdrop-blur-sm">
+                  <h2 className="font-bold text-lg text-gray-800">{order.title}</h2>
+                  <p className="text-gray-600 mt-2">{order.description}</p>
+                  <p className="text-green-600 font-bold mt-4">💰 {order.budget} руб.</p>
+                  <Link 
+                    href={'/orders/' + order.id}
+                    className="block mt-4 text-blue-600 hover:underline"
+                  >
+                    Подробнее →
+                  </Link>
+                </div>
+              )
+            })}
           </div>
         )}
       </div>

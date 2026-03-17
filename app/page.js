@@ -112,7 +112,7 @@ export default function Home() {
 
   if (error) {
     return (
-      <div className="min-h-screen p-8 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 flex items-center justify-center">
+      <div className="min-h-screen p-8 bg-gradient-to-br from-purple-500 via-pink-500 to-white-500 flex items-center justify-center">
         <div className="text-xl text-white bg-red-600 px-6 py-4 rounded-lg">
           Ошибка: {error.message}
         </div>
@@ -121,7 +121,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen p-8 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500">
+    <div className="min-h-screen p-8 bg-gradient-to-br from-purple-500 via-pink-500 to-white-500">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-white drop-shadow-lg">

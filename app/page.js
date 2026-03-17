@@ -11,47 +11,31 @@ export default function Home() {
 
   useEffect(() => {
     const initAuth = async () => {
-      console.log('🔍 Инициализация авторизации...')
-      
       const sessionResult = await supabase.auth.getSession()
       const session = sessionResult.data?.session
       
-      console.log('📦 Session:', session)
-      
       if (session?.user) {
-        console.log('✅ Сессия найдена:', session.user.email)
         setUser(session.user)
         await loadUserRole(session.user.id)
-      } else {
-        console.log('⚠️ Сессия не найдена')
       }
       
       setRoleLoading(false)
     }
 
     const loadUserRole = async (userId) => {
-      console.log('🔍 Загрузка роли для:', userId)
-      
       const profileResult = await supabase
         .from('profiles')
         .select('role')
         .eq('id', userId)
       
-      const profileData = profileResult.data
-      console.log('📦 Profile Data:', profileData)
-      
-      const profile = profileData?.[0]
-      console.log('✅ Profile:', profile)
+      const profile = profileResult.data?.[0]
       
       if (profile?.role) {
         setUserRole(profile.role)
-        console.log('✅ Role установлен:', profile.role)
       }
     }
 
     const authListener = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('🔄 Auth event:', event)
-      
       if (event === 'SIGNED_IN' && session?.user) {
         setUser(session.user)
         loadUserRole(session.user.id)
@@ -96,82 +80,85 @@ export default function Home() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
-    setUser(null)
-    setUserRole(null)
-    setRoleLoading(true)
     window.location.reload()
   }
 
+  // Загрузка
   if (roleLoading || isLoading) {
     return (
-      <div className="min-h-screen p-8 bg-gradient-to-br from-purple-500 via-pink-500 to-white-500 flex items-center justify-center">
-        <div className="text-xl text-white">Загрузка...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 via-pink-600 to-red-600">
+        <div className="text-white text-xl">Загрузка...</div>
       </div>
     )
   }
 
+  // Ошибка
   if (error) {
     return (
-      <div className="min-h-screen p-8 bg-gradient-to-br from-purple-500 via-pink-500 to-white-500 flex items-center justify-center">
-        <div className="text-xl text-white bg-red-600 px-6 py-4 rounded-lg">
-          Ошибка: {error.message}
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 via-pink-600 to-red-600">
+        <div className="bg-white rounded-lg p-6 shadow-xl">
+          <p className="text-red-600">Ошибка: {error.message}</p>
         </div>
       </div>
     )
   }
 
+  // Основная страница
   return (
-    <div className="min-h-screen p-8 bg-gradient-to-br from-purple-500 via-pink-500 to-white-500">
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-600 to-red-600 p-8">
       <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-white drop-shadow-lg">
-            🔥 Биржа AI-карточек
-          </h1>
-          <div className="flex gap-4">
-            {user ? (
-              <>
-                {userRole === 'seller' ? (
-                  <Link href="/create-order" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                    + Создать заказ
+        
+        {/* Шапка */}
+        <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 mb-8 shadow-xl">
+          <div className="flex flex-wrap justify-between items-center gap-4">
+            <h1 className="text-3xl font-bold text-white">🔥 Биржа AI-карточек</h1>
+            <div className="flex flex-wrap gap-3">
+              {user ? (
+                <>
+                  {userRole === 'seller' ? (
+                    <Link href="/create-order" className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-medium transition">
+                      + Создать заказ
+                    </Link>
+                  ) : (
+                    <span className="text-white bg-white/20 px-5 py-2 rounded-lg">🎨 Креатор</span>
+                  )}
+                  <Link href="/profile" className="bg-gray-700 hover:bg-gray-800 text-white px-5 py-2 rounded-lg font-medium transition">
+                    Профиль
                   </Link>
-                ) : (
-                  <span className="text-white px-4 py-2 bg-white/20 rounded">🎨 Креатор</span>
-                )}
-                <Link href="/profile" className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
-                  Профиль
-                </Link>
-                <button onClick={handleLogout} className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
-                  Выйти
-                </button>
-              </>
-            ) : (
-              <>
-                <Link href="/login" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                  Войти
-                </Link>
-                <Link href="/register" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
-                  Регистрация
-                </Link>
-              </>
-            )}
+                  <button onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg font-medium transition">
+                    Выйти
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-medium transition">
+                    Войти
+                  </Link>
+                  <Link href="/register" className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium transition">
+                    Регистрация
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
+        {/* Заказы */}
         {!orders || orders.length === 0 ? (
-          <div className="text-center py-10 bg-white/10 rounded-lg backdrop-blur-sm">
-            <p className="text-white text-lg">😕 Пока нет заказов</p>
+          <div className="bg-white/10 backdrop-blur-md rounded-xl p-10 text-center shadow-xl">
+            <p className="text-white text-xl">😕 Пока нет заказов</p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {orders.map(function(order) {
               return (
-                <div key={order.id} className="border rounded-lg p-4 shadow-lg hover:shadow-xl transition bg-white/95 backdrop-blur-sm">
-                  <h2 className="font-bold text-lg text-gray-800">{order.title}</h2>
-                  <p className="text-gray-600 mt-2">{order.description}</p>
-                  <p className="text-green-600 font-bold mt-4">💰 {order.budget} руб.</p>
+                <div key={order.id} className="bg-white rounded-xl p-6 shadow-xl hover:shadow-2xl transition">
+                  <h2 className="font-bold text-xl text-gray-800 mb-3">{order.title}</h2>
+                  <p className="text-gray-600 mb-4">{order.description}</p>
+                  <p className="text-green-600 font-bold text-lg mb-4">💰 {order.budget} руб.</p>
                   <Link 
                     href={'/orders/' + order.id}
-                    className="block mt-4 text-blue-600 hover:underline"
+                    className="text-blue-600 hover:text-blue-800 font-medium"
                   >
                     Подробнее →
                   </Link>

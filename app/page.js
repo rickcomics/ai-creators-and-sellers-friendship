@@ -104,15 +104,18 @@ export default function Home() {
 
   if (roleLoading || isLoading) {
     return (
+    <div className="min-h-screen p-8 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500">
       <div className="min-h-screen p-8 flex items-center justify-center">
         <div className="text-xl">Загрузка...</div>
       </div>
+    </div>  
     )
   }
 
   if (error) {
     return (
-      <div className="min-h-screen p-8 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500">
+      
+      <div className="min-h-screen p-8 flex items-center justify-center">
         <div className="text-xl text-red-600">Ошибка: {error.message}</div>
       </div>
     )
@@ -122,7 +125,7 @@ export default function Home() {
     <div className="min-h-screen p-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-white drop-shadow-lg">🔥 Биржа AI-карточек</h1>
+          <h1 className="text-3xl font-bold">🔥 Биржа AI-карточек</h1>
           <div className="flex gap-4">
             {user ? (
               <>
